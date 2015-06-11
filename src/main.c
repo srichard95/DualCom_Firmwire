@@ -50,10 +50,10 @@ static msg_t Thread1(void *arg) {
   while (TRUE) {
 
     palClearPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(100);
+    chThdSleepMilliseconds(200);
 
     palSetPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(100);
+    chThdSleepMilliseconds(200);
 
   }
 }
