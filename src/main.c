@@ -30,14 +30,14 @@ void serial_init(void)
 {
 
   sdInit();
-  sdStart(&SD1, &uartCfg);
+  sdStart(&SD2, &uartCfg);
 }
 static uint8_t txbuf = 0x01;
 void serial_send(void)
 {
   //txbuf++;
   //sdWrite(&SD6, (uint8_t *) txbuf, 1);
-  sdPut(&SD1, txbuf);
+  sdPut(&SD2, txbuf);
 }
 
 
@@ -50,10 +50,14 @@ static msg_t Thread1(void *arg) {
   while (TRUE) {
 
     palClearPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(200);
+    chThdSleepMilliseconds(100);
+
+    serial_send();
 
     palSetPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(200);
+    chThdSleepMilliseconds(100);
+
+    serial_send();
 
   }
 }
@@ -67,7 +71,7 @@ int main(void) {
   chSysInit();
 
 
-  //serial_init();
+  serial_init();
 
   can_commInit();
 
