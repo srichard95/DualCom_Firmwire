@@ -8,10 +8,16 @@
 */
 
 -SPI
+
 -I2C
+
 -CAN
+
 -ONEWIRE
+
 -RS232
+
 -GPIO
+
 -ESP8286 WIFI
 
