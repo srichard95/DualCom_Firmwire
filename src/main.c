@@ -16,31 +16,8 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "console.h"
 #include "can_comm.h"
-
-static SerialConfig uartCfg =
-{
-115200, // bit rate
-0,
-0,
-0
-};
-
-void serial_init(void)
-{
-
-  sdInit();
-  sdStart(&SD2, &uartCfg);
-}
-static uint8_t txbuf = 0x01;
-void serial_send(void)
-{
-  //txbuf++;
-  //sdWrite(&SD6, (uint8_t *) txbuf, 1);
-  sdPut(&SD2, txbuf);
-}
-
-
 
 static WORKING_AREA(waThread1, 128);
 static msg_t Thread1(void *arg) {
@@ -50,15 +27,10 @@ static msg_t Thread1(void *arg) {
   while (TRUE) {
 
     palClearPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(100);
-
-    serial_send();
+    chThdSleepMilliseconds(200);
 
     palSetPad(GPIOB, GPIOB_LED1);     //LS1
-    chThdSleepMilliseconds(100);
-
-    serial_send();
-
+    chThdSleepMilliseconds(200);
   }
 }
 
@@ -71,7 +43,7 @@ int main(void) {
   chSysInit();
 
 
-  serial_init();
+  consoleInit();
 
   can_commInit();
 
@@ -81,6 +53,7 @@ int main(void) {
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
   while (TRUE) {
-    chThdSleepMilliseconds(500);
+    consoleStart();
+    chThdSleepMilliseconds(1000);
   }
 }

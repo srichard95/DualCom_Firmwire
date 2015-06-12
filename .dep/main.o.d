@@ -64,7 +64,8 @@ build/obj/main.o: src/main.c ../../Chibios/os/kernel/include/ch.h \
  ../../Chibios/os/hal/platforms/STM32/SPIv1/spi_lld.h \
  ../../Chibios/os/hal/include/uart.h ../../Chibios/os/hal/include/usb.h \
  ../../Chibios/os/hal/include/mmc_spi.h \
- ../../Chibios/os/hal/include/serial_usb.h include/can_comm.h
+ ../../Chibios/os/hal/include/serial_usb.h include/console.h \
+ include/can_comm.h
 
 ../../Chibios/os/kernel/include/ch.h:
 
@@ -221,5 +222,7 @@ os/mcuconf.h:
 ../../Chibios/os/hal/include/mmc_spi.h:
 
 ../../Chibios/os/hal/include/serial_usb.h:
+
+include/console.h:
 
 include/can_comm.h:

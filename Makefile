@@ -88,8 +88,12 @@ CSRC = $(PORTSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
+       $(CHIBIOS)/os/various/syscalls.c \
+       $(CHIBIOS)/os/various/shell.c \
        $(CHIBIOS)/os/various/chprintf.c \
+       $(CHIBIOS)/os/various/chrtclib.c \
 	   src/can_comm.c \
+	   src/console.c \
        src/main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
