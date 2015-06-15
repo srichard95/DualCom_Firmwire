@@ -113,8 +113,8 @@
  * PA11 - Alternate Push Pull output 10MHz.         (CAN_RX)
  * PA12 - Alternate Push Pull output 10MHz.         (CAN_TX)
  */
-#define VAL_GPIOACRL            0xB4B34B38      /*  PA7...PA0 */
-#define VAL_GPIOACRH            0x88894384      /* PA15...PA8 */
+#define VAL_GPIOACRL            0xB4B34B48      /*  PA7...PA0 */
+#define VAL_GPIOACRH            0x888944B4      /* PA15...PA8 */
 #define VAL_GPIOAODR            0xFFFFFFFF
 
 /*
@@ -128,7 +128,7 @@
  * PB6  - Digital input.                            (DIP_2)
  * PB7  - Digital input.                            (DIP_1)
  */
-#define VAL_GPIOBCRL            0x44374800      /*  PB7...PB0 */
+#define VAL_GPIOBCRL            0x44374844      /*  PB7...PB0 */
 #define VAL_GPIOBCRH            0x88888888      /* PB15...PB8 */
 #define VAL_GPIOBODR            0xFFFFFFFF
 

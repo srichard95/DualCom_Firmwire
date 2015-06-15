@@ -18,6 +18,7 @@
 #include "hal.h"
 #include "console.h"
 #include "can_comm.h"
+#include "at_mode.h"
 
 static WORKING_AREA(waThread1, 128);
 static msg_t Thread1(void *arg) {
@@ -26,10 +27,10 @@ static msg_t Thread1(void *arg) {
   chRegSetThreadName("blinker");
   while (TRUE) {
 
-    palClearPad(GPIOB, GPIOB_LED1);     //LS1
+    palClearPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
 
-    palSetPad(GPIOB, GPIOB_LED1);     //LS1
+    palSetPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
   }
 }
@@ -41,6 +42,9 @@ int main(void) {
 
   halInit();
   chSysInit();
+
+  if (palReadPad(GPIOA, GPIOA_IN0) == PAL_HIGH)
+    init_atmode();
 
 
   consoleInit();
