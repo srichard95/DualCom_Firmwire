@@ -19,8 +19,9 @@
 #include "chrtclib.h"
 
 #include "console.h"
+#include "wifi.h"
 
-
+#include <errno.h>
 
 /* libc stub */
 int _getpid(void) {return 1;}
@@ -58,6 +59,8 @@ Thread *consoleThread;
 static const ShellCommand commands[] = {
   {"mem", cmd_mem},
   {"threads", cmd_threads},
+  {"wifisend", wifi_debug},
+  {"send_at", send_at},
   {NULL, NULL}
 };
 

@@ -26,9 +26,7 @@ static CANRxFrame rxmsg;
 static const CANConfig cancfg = {
   CAN_MCR_ABOM,
   CAN_BTR_SJW(0) | CAN_BTR_TS2(1) |
-  CAN_BTR_TS1(8) | CAN_BTR_BRP(6),
-  0,
-  NULL
+  CAN_BTR_TS1(8) | CAN_BTR_BRP(5)
 };
 
 struct can_instance {
@@ -42,8 +40,6 @@ static msg_t Villog() {
     chThdSleepMilliseconds(400);
     return 0;
 }
-
-
 
 
 static WORKING_AREA(can_rx_wa, 256);
@@ -65,10 +61,6 @@ static msg_t can_rx(void *p) {
 
         chThdCreateStatic(wa_villog, sizeof(wa_villog), NORMALPRIO, Villog, NULL);
       }
-
-
-
-
     }
   }
   chEvtUnregister(&CAND1.rxfull_event, &el);

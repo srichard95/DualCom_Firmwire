@@ -95,6 +95,7 @@ CSRC = $(PORTSRC) \
 	   src/can_comm.c \
 	   src/console.c \
 	   src/at_mode.c \
+	   src/wifi.c \
        src/main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

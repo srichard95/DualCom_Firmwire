@@ -65,7 +65,7 @@ build/obj/main.o: src/main.c ../../Chibios/os/kernel/include/ch.h \
  ../../Chibios/os/hal/include/uart.h ../../Chibios/os/hal/include/usb.h \
  ../../Chibios/os/hal/include/mmc_spi.h \
  ../../Chibios/os/hal/include/serial_usb.h include/console.h \
- include/can_comm.h include/at_mode.h
+ include/can_comm.h include/at_mode.h include/wifi.h
 
 ../../Chibios/os/kernel/include/ch.h:
 
@@ -228,3 +228,5 @@ include/console.h:
 include/can_comm.h:
 
 include/at_mode.h:
+
+include/wifi.h:

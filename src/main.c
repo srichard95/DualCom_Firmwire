@@ -19,6 +19,7 @@
 #include "console.h"
 #include "can_comm.h"
 #include "at_mode.h"
+#include "wifi.h"
 
 static WORKING_AREA(waThread1, 128);
 static msg_t Thread1(void *arg) {
@@ -29,6 +30,8 @@ static msg_t Thread1(void *arg) {
 
     palClearPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
+
+    //wifi_send();
 
     palSetPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
@@ -48,8 +51,8 @@ int main(void) {
 
 
   consoleInit();
-
   can_commInit();
+  init_wifi();
 
 
   /*
