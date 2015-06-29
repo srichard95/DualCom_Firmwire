@@ -74,7 +74,10 @@ build/obj/can_comm.o: src/can_comm.c \
  ../../Chibios/os/hal/platforms/STM32/SPIv1/spi_lld.h \
  ../../Chibios/os/hal/include/uart.h ../../Chibios/os/hal/include/usb.h \
  ../../Chibios/os/hal/include/mmc_spi.h \
- ../../Chibios/os/hal/include/serial_usb.h include/can_comm.h
+ ../../Chibios/os/hal/include/serial_usb.h \
+ ../../Chibios/os/various/chprintf.h \
+ c:\chibistudio\tools\gnu\ tools\ arm\ embedded\4.7\ 2014q2\bin\../lib/gcc/arm-none-eabi/4.7.4/include/stdarg.h \
+ include/can_comm.h include/console.h include/wifi.h
 
 c:\chibistudio\tools\gnu\ tools\ arm\ embedded\4.7\ 2014q2\bin\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdlib.h:
 
@@ -250,4 +253,12 @@ os/mcuconf.h:
 
 ../../Chibios/os/hal/include/serial_usb.h:
 
+../../Chibios/os/various/chprintf.h:
+
+c:\chibistudio\tools\gnu\ tools\ arm\ embedded\4.7\ 2014q2\bin\../lib/gcc/arm-none-eabi/4.7.4/include/stdarg.h:
+
 include/can_comm.h:
+
+include/console.h:
+
+include/wifi.h:

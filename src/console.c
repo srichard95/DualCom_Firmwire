@@ -20,6 +20,7 @@
 
 #include "console.h"
 #include "wifi.h"
+#include "can_comm.h"
 
 #include <errno.h>
 
@@ -61,6 +62,7 @@ static const ShellCommand commands[] = {
   {"threads", cmd_threads},
   {"wifisend", wifi_debug},
   {"send_at", send_at},
+  {"can_buffer", can_buffer},
   {NULL, NULL}
 };
 

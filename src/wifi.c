@@ -5,13 +5,13 @@
  *  Created on: 2015 jún. 19
  *      Author: Richárd
  */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "ch.h"
 #include "hal.h"
 #include "wifi.h"
 #include "chprintf.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 //Connection String: AT+CIPSTART=0,"UDP","192.168.4.255",4000,4001,0
 char connstring[] = {0x41, 0x54, 0x2b, 0x43, 0x49, 0x50, 0x53,
@@ -33,30 +33,34 @@ static SerialConfig uartCfg1 =
 void init_wifi()
 {
   sdStart(&SD1, &uartCfg1);
-  chThdSleepMilliseconds(2000);
+  chThdSleepMilliseconds(1000);
   chSequentialStreamWrite(&SD1, "AT+CIPMUX=1\r\n",13);
-  chThdSleepMilliseconds(100);
+  chThdSleepMilliseconds(10);
   chSequentialStreamWrite(&SD1,  connstring, 49);
   chThdSleepMilliseconds(10);
   chSequentialStreamWrite(&SD1, "ATE0\r\n",6);
-  chThdSleepMilliseconds(10);
+  chThdSleepMilliseconds(100);
   clear_serial_buffer();
 }
 
+
 void wifi_send(char *data[], int length)
 {
+  chSysLock();
   clear_serial_buffer();
-  char send_string[16];
-  sprintf(send_string, "AT+CIPSEND=0,%d\r\n", length);
+  char *send_string[16];
+  sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length);
   chprintf(&SD1, send_string);
   WaitForPrompt();
-  chprintf(&SD1, data);
+  chSequentialStreamWrite(&SD1, data, length);
+  chThdSleepMilliseconds(10);
+  chSysUnlock();
 }
 void clear_serial_buffer()
 {
+  char c;
   while(!sdGetWouldBlock(&SD1))
   {
-    char c;
     chSequentialStreamRead(&SD1, &c, 1);
   }
 }

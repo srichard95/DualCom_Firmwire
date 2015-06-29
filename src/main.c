@@ -31,12 +31,11 @@ static msg_t Thread1(void *arg) {
     palClearPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
 
-    //wifi_send();
-
     palSetPad(GPIOB, GPIOB_LED1);
     chThdSleepMilliseconds(200);
   }
 }
+
 
 /*
  * Application entry point.
@@ -49,10 +48,17 @@ int main(void) {
   if (palReadPad(GPIOA, GPIOA_IN0) == PAL_HIGH)
     init_atmode();
 
+  palClearPad(GPIOB, GPIOB_LED1);
 
   consoleInit();
-  can_commInit();
+
   init_wifi();
+
+  //char sajt[] = "sajt";
+  //wifi_send(sajt, 4);
+
+  can_commInit();
+
 
 
   /*
