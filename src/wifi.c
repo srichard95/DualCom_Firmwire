@@ -29,33 +29,40 @@ static SerialConfig uartCfg1 =
    0,
    0
 };
-
+/*
+ * ESP8266 INIT
+ */
 void init_wifi()
 {
   sdStart(&SD1, &uartCfg1);
-  chThdSleepMilliseconds(1000);
-  chSequentialStreamWrite(&SD1, "AT+CIPMUX=1\r\n",13);
+  chThdSleepMilliseconds(1000);                         //Wait For Ready state
+  chSequentialStreamWrite(&SD1, "AT+CIPMUX=1\r\n",13);  //Multiple connection
   chThdSleepMilliseconds(10);
-  chSequentialStreamWrite(&SD1,  connstring, 49);
+  chSequentialStreamWrite(&SD1,  connstring, 49);       //Connection string
   chThdSleepMilliseconds(10);
-  chSequentialStreamWrite(&SD1, "ATE0\r\n",6);
-  chThdSleepMilliseconds(100);
-  clear_serial_buffer();
+  chSequentialStreamWrite(&SD1, "ATE0\r\n",6);          //ECHO OFF
+  chThdSleepMilliseconds(10);
+  clear_serial_buffer();                                //Clear serial buffer
 }
 
-
+/*
+ * Send Packet via UDP connection
+ */
 void wifi_send(char *data[], int length)
 {
   chSysLock();
   clear_serial_buffer();
   char *send_string[16];
-  sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length);
-  chprintf(&SD1, send_string);
-  WaitForPrompt();
-  chSequentialStreamWrite(&SD1, data, length);
-  chThdSleepMilliseconds(10);
+  sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length); //Start UDP connection
+  chprintf(&SD1, send_string);                          //Send
+  WaitForPrompt();                                      //Wait for start the connection
+  chSequentialStreamWrite(&SD1, data, length);          //Send the datas
   chSysUnlock();
 }
+
+/*
+ * Clear serial buffer for the incoming data
+ */
 void clear_serial_buffer()
 {
   char c;
@@ -65,6 +72,9 @@ void clear_serial_buffer()
   }
 }
 
+/*
+ * Wait the prompt from the ESP8266
+ */
 void WaitForPrompt()
 {
   char c;
@@ -74,7 +84,9 @@ void WaitForPrompt()
 }
 
 
-//debug functions--------------------------------------------------
+/*
+ * Debug functions
+ */
 void send_at(BaseSequentialStream *chp, int argc, char *argv[])
 {
   clear_serial_buffer();

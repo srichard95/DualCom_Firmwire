@@ -26,7 +26,9 @@ static SerialConfig uartCfg2 =
 0
 };
 
-
+/*
+ * Receive from the RS232 and send to the WiFi
+ */
 static WORKING_AREA(waSending, 128);
 static msg_t Sending(void *arg) {
 
@@ -41,6 +43,9 @@ static msg_t Sending(void *arg) {
   }
 }
 
+/*
+ * Receive from the WiFi and send to the RS232
+ */
 static WORKING_AREA(waReceive, 128);
 static msg_t Receive(void *arg) {
 
@@ -56,11 +61,14 @@ static msg_t Receive(void *arg) {
 }
 
 
+/*
+ * Init AT MODE
+ */
 void init_atmode()
 {
   sdInit();
-  sdStart(&SD1, &uartCfg1);
-  sdStart(&SD2, &uartCfg2);
+  sdStart(&SD1, &uartCfg1);     //Start Serial Driver 1
+  sdStart(&SD2, &uartCfg2);     //Start Serial Driver 2
 
   chThdCreateStatic(waSending, sizeof(waSending), NORMALPRIO, Sending, NULL);
   chThdCreateStatic(waReceive, sizeof(waReceive), NORMALPRIO, Receive, NULL);

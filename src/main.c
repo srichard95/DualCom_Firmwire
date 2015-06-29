@@ -23,7 +23,6 @@
 
 static WORKING_AREA(waThread1, 128);
 static msg_t Thread1(void *arg) {
-
   (void)arg;
   chRegSetThreadName("blinker");
   while (TRUE) {
@@ -45,28 +44,33 @@ int main(void) {
   halInit();
   chSysInit();
 
+  /*
+   * AT MODE Switch
+   */
   if (palReadPad(GPIOA, GPIOA_IN0) == PAL_HIGH)
     init_atmode();
 
-  palClearPad(GPIOB, GPIOB_LED1);
-
+  /*
+   * SHELL init
+   */
   consoleInit();
 
+  /*
+   * ESP8266 Driver init
+   */
   init_wifi();
 
-  //char sajt[] = "sajt";
-  //wifi_send(sajt, 4);
-
+  /*
+   * CAN Communication init
+   */
   can_commInit();
 
-
-
   /*
-   * Creates the example thread.
+   * Start blinker thread.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
   while (TRUE) {
     consoleStart();
-    chThdSleepMilliseconds(1000);
+    chThdSleepMilliseconds(500);
   }
 }
