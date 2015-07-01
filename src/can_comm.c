@@ -63,7 +63,6 @@ static msg_t wifi_send_task(void * p) {
 static WORKING_AREA(can_rx_wa, 256);
 static msg_t can_rx(void *p) {
   EventListener el;
-  int i;
 
   (void)p;
   chRegSetThreadName("receiver");
@@ -98,6 +97,7 @@ static msg_t can_rx(void *p) {
         //wifi_send(buffer, BUFFER_SIZE);
         //clear_buffer();
       }
+      rxmsg.EID = 0x00;
       chSemSignal(&buf_sem);
 
 

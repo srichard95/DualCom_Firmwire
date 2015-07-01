@@ -128,7 +128,7 @@
  * PB6  - Digital input.                            (DIP_2)
  * PB7  - Digital input.                            (DIP_1)
  */
-#define VAL_GPIOBCRL            0x44374844      /*  PB7...PB0 */
+#define VAL_GPIOBCRL            0x44333844      /*  PB7...PB0 */
 #define VAL_GPIOBCRH            0x88888888      /* PB15...PB8 */
 #define VAL_GPIOBODR            0xFFFFFFFF
 
