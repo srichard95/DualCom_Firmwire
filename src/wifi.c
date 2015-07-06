@@ -24,7 +24,7 @@ char connstring[] = {0x41, 0x54, 0x2b, 0x43, 0x49, 0x50, 0x53,
 
 static SerialConfig uartCfg1 =
 {
-   115200, // bit rate
+   230400, // bit rate
    0,
    0,
    0
@@ -55,7 +55,8 @@ void wifi_send(char *data[], int length)
   char *send_string[16];
   sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length); //Start UDP connection
   chprintf(&SD1, send_string);                          //Send
-  WaitForPrompt();                                      //Wait for start the connection
+  chThdSleepMilliseconds(1);
+  //WaitForPrompt();                                      //Wait for start the connection
   chSequentialStreamWrite(&SD1, data, length);          //Send the datas
   chSysUnlock();
 }
@@ -112,4 +113,8 @@ void wifi_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
   chThdSleepMilliseconds(4);
   read_buffer(chp);
 }
+void read_buffer_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
+  read_buffer(chp);
+}
+
 //------------------------------------------------------------------

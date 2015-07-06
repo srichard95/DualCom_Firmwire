@@ -80,7 +80,7 @@ build/obj/can_comm.o: src/can_comm.c \
  ../../Chibios/os/hal/include/mmc_spi.h \
  ../../Chibios/os/hal/include/serial_usb.h \
  ../../Chibios/os/various/chprintf.h include/can_comm.h include/console.h \
- include/wifi.h
+ include/wifi.h include/crc.h
 
 c:\chibistudio\tools\gnu\ tools\ arm\ embedded\4.7\ 2014q2\bin\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdio.h:
 
@@ -271,3 +271,5 @@ include/can_comm.h:
 include/console.h:
 
 include/wifi.h:
+
+include/crc.h:

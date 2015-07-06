@@ -12,7 +12,7 @@
 
 static SerialConfig uartCfg1 =
 {
-115200, // bit rate
+230400, // bit rate
 0,
 0,
 0

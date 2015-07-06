@@ -13,6 +13,7 @@
 #include "can_comm.h"
 #include "console.h"
 #include "wifi.h"
+#include "crc.h"
 
 static CANTxFrame txmsg;
 static CANRxFrame rxmsg;
@@ -88,7 +89,7 @@ static msg_t can_rx(void *p) {
         buffer[curr_pos + 8] = rxmsg.data8[5];
         buffer[curr_pos + 9] = rxmsg.data8[6];
         buffer[curr_pos + 10] = rxmsg.data8[7];
-        buffer[curr_pos + 11] = 0x00;
+        buffer[curr_pos + 11] = CreateCRC(curr_pos);
 
         packet_counter++;
       }else if (packet_counter > PACKET_SIZE)
@@ -164,6 +165,7 @@ void can_buffer(BaseSequentialStream *chp, int argc, char *argv[]) {
     chprintf(chp, "\x1B[2J");
     chprintf(chp, "CAN BUFFER: %d\r\n", packet_counter);
 
+    /*
     int i;
     for(i = 0; i < PACKET_SIZE; i++)
     {
@@ -184,6 +186,7 @@ void can_buffer(BaseSequentialStream *chp, int argc, char *argv[]) {
                buffer[curr_pos + 11]);
       chSysUnlock();
     }
+    */
     chThdSleepMilliseconds(200);
   }
 }

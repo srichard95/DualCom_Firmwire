@@ -63,6 +63,7 @@ static const ShellCommand commands[] = {
   {"wifisend", wifi_debug},
   {"send_at", send_at},
   {"can_buffer", can_buffer},
+  {"serial_buffer", read_buffer_debug},
   {NULL, NULL}
 };
 
