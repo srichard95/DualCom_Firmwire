@@ -25,9 +25,6 @@ char connstring[] = {0x41, 0x54, 0x2b, 0x43, 0x49, 0x50, 0x53,
 static SerialConfig uartCfg1 =
 {
    230400, // bit rate
-   0,
-   0,
-   0
 };
 /*
  * ESP8266 INIT
