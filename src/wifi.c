@@ -94,13 +94,27 @@ void send_at(BaseSequentialStream *chp, int argc, char *argv[])
 }
 void read_buffer(BaseSequentialStream *chp)
 {
+  uint8_t scanbuff[50];
+  int counter = 0;
+  char sajt[30];
   while(!sdGetWouldBlock(&SD1))
   {
-    char c;
-    c = sdGet(&SD1);
-    chprintf(chp, "%c", c);
+    scanbuff[counter] = sdGet(&SD1);
+    counter++;
   }
-  chprintf(chp, "\r\n");
+
+  sscanf((const char*)scanbuff, "%s", &sajt);
+
+  if (strcmp(sajt, "SEND") ==  0)
+  {
+    palClearPad(GPIOB, GPIOB_LED1);
+    chThdSleepMilliseconds(200);
+
+    palSetPad(GPIOB, GPIOB_LED1);
+    chThdSleepMilliseconds(200);
+  }
+
+  chprintf(chp, "%s\r\n", &sajt);
 }
 void wifi_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
   chprintf(chp, "DATA SENT: %s %d\r\n", argv[0], strlen(argv[0]));
@@ -118,7 +132,7 @@ void read_buffer_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
     read_buffer(chp);
 
 
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(200);
   }
 
 }
