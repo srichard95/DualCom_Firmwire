@@ -27,8 +27,44 @@ static const CANConfig cancfg = {
 
 char buffer[BUFFER_SIZE];   //BUFFER for the incoming CAN messages
 int packet_counter=0;       //Count the BUFFER's packets
+char frame_counter = 0;
 static Semaphore buf_sem;   //Semaphore to lock the BUFFER read/write
 
+long long total_sent_packets = 0;   //Sum of sent packets
+
+/*
+ * Telemetry statistics sender tasks
+ */
+static WORKING_AREA(telemetry_statistics_wa, 128);
+static msg_t telemetry_statistics(void * p) {
+  chRegSetThreadName("telemetry statistics send");
+  systime_t time;
+  time = chTimeNow();
+  while(TRUE)
+  {
+    time += MS2ST(500);
+    chSemWait(&buf_sem);
+    int curr_pos = packet_counter * FRAME_SIZE;
+
+    buffer[curr_pos + 0] = 0x03;
+    buffer[curr_pos + 1] = 0x00;
+    buffer[curr_pos + 2] = frame_counter;
+    buffer[curr_pos + 3] = total_sent_packets >> 56;
+    buffer[curr_pos + 4] = total_sent_packets >> 48;
+    buffer[curr_pos + 5] = total_sent_packets >> 40;
+    buffer[curr_pos + 6] = total_sent_packets >> 32;
+    buffer[curr_pos + 7] = total_sent_packets >> 24;
+    buffer[curr_pos + 8] = total_sent_packets >> 16;
+    buffer[curr_pos + 9] = total_sent_packets >> 8;
+    buffer[curr_pos + 10] = (uint8_t)total_sent_packets;
+    buffer[curr_pos + 11] = CreateCRC(&buffer[curr_pos]);
+
+    packet_counter++;
+
+    chSemSignal(&buf_sem);
+    chThdSleepUntil(time);
+  }
+}
 
 /*
  * 40 ms WiFi send task
@@ -41,15 +77,18 @@ static msg_t wifi_send_task(void * p) {
   time = chTimeNow();
   while(TRUE)
   {
-    time += MS2ST(40);
+    time += MS2ST(100);
     chSemWait(&buf_sem);
 
     if(packet_counter > 0)
     {
       int actual_packet_size = packet_counter * FRAME_SIZE;
       wifi_send(buffer, actual_packet_size);
+      total_sent_packets++;
       packet_counter = 0;
       clear_buffer();
+
+      frame_counter++;
     }
     chSemSignal(&buf_sem);
     chThdSleepUntil(time);
@@ -74,13 +113,14 @@ static msg_t can_rx(void *p) {
     while (canReceive(&CAND1, CAN_ANY_MAILBOX, &rxmsg, TIME_IMMEDIATE) == RDY_OK) {
 
       chSemWait(&buf_sem);
+
       if (packet_counter < PACKET_SIZE)
       {
         int curr_pos = packet_counter * FRAME_SIZE;
 
         buffer[curr_pos + 0] = rxmsg.EID >> 8;
         buffer[curr_pos + 1] = (uint8_t)rxmsg.EID;
-        buffer[curr_pos + 2] = 0x00;
+        buffer[curr_pos + 2] = frame_counter;
         buffer[curr_pos + 3] = rxmsg.data8[0];
         buffer[curr_pos + 4] = rxmsg.data8[1];
         buffer[curr_pos + 5] = rxmsg.data8[2];
@@ -89,7 +129,7 @@ static msg_t can_rx(void *p) {
         buffer[curr_pos + 8] = rxmsg.data8[5];
         buffer[curr_pos + 9] = rxmsg.data8[6];
         buffer[curr_pos + 10] = rxmsg.data8[7];
-        buffer[curr_pos + 11] = CreateCRC(curr_pos);
+        buffer[curr_pos + 11] = CreateCRC(&buffer[curr_pos]);
 
         packet_counter++;
       }else if (packet_counter > PACKET_SIZE)
@@ -100,7 +140,6 @@ static msg_t can_rx(void *p) {
       }
       rxmsg.EID = 0x00;
       chSemSignal(&buf_sem);
-
 
     }
   }
@@ -141,6 +180,8 @@ void can_commInit(void){
 
   chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO, can_rx, NULL);                //Start can Receiver thread
   chThdCreateStatic(wifi_send_wa, sizeof(wifi_send_wa), NORMALPRIO, wifi_send_task, NULL);  //Start WiFi sender task
+  chThdCreateStatic(telemetry_statistics_wa, sizeof(telemetry_statistics_wa), NORMALPRIO, telemetry_statistics, NULL);  //Start telemetry statistics sender task
+
 
   //chThdCreateStatic(can_tx_wa, sizeof(can_tx_wa), NORMALPRIO + 7, can_tx, NULL);
 }
@@ -154,20 +195,21 @@ void clear_buffer(){
 }
 
 
-/*
+
+/**********************************************************************
  * Debug Functions
  */
 void can_buffer(BaseSequentialStream *chp, int argc, char *argv[]) {
   chprintf(chp, "\x1B\x63");
   chprintf(chp, "\x1B[2J");
   while (chnGetTimeout((BaseChannel *)chp, TIME_IMMEDIATE) == Q_TIMEOUT) {
-    chprintf(chp, "\x1B\x63");
-    chprintf(chp, "\x1B[2J");
+   // chprintf(chp, "\x1B\x63");
+    //chprintf(chp, "\x1B[2J");
+    chSemWait(&buf_sem);
     chprintf(chp, "CAN BUFFER: %d\r\n", packet_counter);
 
-    /*
     int i;
-    for(i = 0; i < PACKET_SIZE; i++)
+    for(i = 0; i < packet_counter; i++)
     {
       int curr_pos = i * FRAME_SIZE;
       chSysLock();
@@ -186,7 +228,8 @@ void can_buffer(BaseSequentialStream *chp, int argc, char *argv[]) {
                buffer[curr_pos + 11]);
       chSysUnlock();
     }
-    */
+    chSemSignal(&buf_sem);
+
     chThdSleepMilliseconds(200);
   }
 }
