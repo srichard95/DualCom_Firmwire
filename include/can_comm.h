@@ -8,7 +8,7 @@
 #ifndef CAN_COMM_H_
 #define CAN_COMM_H_
 
-#define PACKET_SIZE 417
+#define PACKET_SIZE 200
 #define FRAME_SIZE 12
 #define BUFFER_SIZE (FRAME_SIZE*PACKET_SIZE)
 

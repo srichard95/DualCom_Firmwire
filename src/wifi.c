@@ -24,7 +24,7 @@ char connstring[] = {0x41, 0x54, 0x2b, 0x43, 0x49, 0x50, 0x53,
 
 static SerialConfig uartCfg1 =
 {
-   230400, // bit rate
+115200, // bit rate
 };
 /*
  * ESP8266 INIT
@@ -45,16 +45,16 @@ void init_wifi()
 /*
  * Send Packet via UDP connection
  */
-void wifi_send(char *data[], int length)
+void wifi_send(char *data, int length)
 {
   chSysLock();
   //clear_serial_buffer();
   char *send_string[16];
   sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length); //Start UDP connection
   chprintf(&SD1, send_string);                          //Send
-  chThdSleepMilliseconds(1);
+  chThdSleepMilliseconds(5);
   //WaitForPrompt();                                      //Wait for start the connection
-  chSequentialStreamWrite(&SD1, data, length);          //Send the datas
+  sdWrite(&SD1, data, length);          //Send the datas
   chSysUnlock();
 }
 
