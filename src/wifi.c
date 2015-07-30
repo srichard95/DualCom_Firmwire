@@ -52,9 +52,9 @@ void wifi_send(char *data, int length)
   char *send_string[16];
   sprintf(&send_string, "AT+CIPSEND=0,%d\r\n", length); //Start UDP connection
   chprintf(&SD1, send_string);                          //Send
-  chThdSleepMilliseconds(5);
+  chThdSleepMilliseconds(2);
   //WaitForPrompt();                                      //Wait for start the connection
-  sdWrite(&SD1, data, length);          //Send the datas
+  chSequentialStreamWrite(&SD1, data, length);          //Send the datas
   chSysUnlock();
 }
 
@@ -114,10 +114,7 @@ void read_buffer_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
   while (chnGetTimeout((BaseChannel *)chp, TIME_IMMEDIATE) == Q_TIMEOUT) {
     chprintf(chp, "\x1B\x63");
     chprintf(chp, "\x1B[2J");
-
     read_buffer(chp);
-
-
     chThdSleepMilliseconds(500);
   }
 

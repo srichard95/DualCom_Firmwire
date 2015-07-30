@@ -42,7 +42,7 @@ static msg_t telemetry_statistics(void * p) {
   time = chTimeNow();
   while(TRUE)
   {
-    time += MS2ST(500);
+    time += MS2ST(1000);
     chSemWait(&buf_sem);
     int curr_pos = packet_counter * FRAME_SIZE;
 
@@ -230,7 +230,7 @@ void can_buffer(BaseSequentialStream *chp, int argc, char *argv[]) {
     }
     chSemSignal(&buf_sem);
 
-    chThdSleepMilliseconds(200);
+    chThdSleepMilliseconds(100);
   }
 }
 //---------------------------------------------------------------------------
