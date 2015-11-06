@@ -21,7 +21,7 @@ static CANRxFrame rxmsg;
 static const CANConfig cancfg = {
   CAN_MCR_ABOM,
   CAN_BTR_SJW(0) | CAN_BTR_TS2(1) |
-  CAN_BTR_TS1(8) | CAN_BTR_BRP(5)
+  CAN_BTR_TS1(8) | CAN_BTR_BRP(11)
 };
 
 
